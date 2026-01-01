@@ -1,0 +1,424 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package Jframe;
+
+import Jframe.DBConnection;
+import java.sql.Statement;
+import java.sql.Connection;
+import javax.swing.table.DefaultTableModel;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import java.sql.ResultSet;
+import javax.swing.table.TableModel;
+import java.sql.PreparedStatement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ *
+ * @author mihiranga.dev
+ */
+public class ProductManagementPage extends javax.swing.JFrame {
+
+    int id, qty;
+    String name, category;
+    double price;
+    DefaultTableModel model;
+
+    /**
+     * Creates new form ProductManagementPage
+     */
+    public ProductManagementPage() {
+        initComponents();
+        setProductDetailsToTable();
+    }
+
+    public void setProductDetailsToTable() {
+        model = (DefaultTableModel) tbl_productDetails.getModel();
+        model.setRowCount(0);
+
+        try {
+            Connection con = DBConnection.getConnection();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM products");
+
+            while (rs.next()) {
+                int id = rs.getInt("product_id");
+                String name = rs.getString("product_name");
+                String category = rs.getString("category");
+                int qty = rs.getInt("quantity");
+                double price = rs.getDouble("price");
+                
+
+                Object[] obj = {id, name, category, qty, price};
+                model.addRow(obj);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public boolean addProduct() {
+        id = Integer.parseInt(txt_productId.getText());
+        name = txt_name.getText();
+        category = txt_category.getText();
+        qty = Integer.parseInt(txt_quantity.getText());
+        price = Integer.parseInt(txt_price.getText());
+
+        boolean isAdded = false;
+
+        try {
+            Connection con = DBConnection.getConnection();
+            String sql = "INSERT INTO products VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, id);
+            pst.setString(2, name);
+            pst.setString(3, category);
+            pst.setInt(4, qty);
+            pst.setDouble(5, price);
+
+            int rowCount = pst.executeUpdate();
+            isAdded = rowCount > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage());
+        }
+
+        return isAdded;
+    }
+
+    public boolean updateProduct() {
+        id = Integer.parseInt(txt_productId.getText());
+        name = txt_name.getText();
+        category = txt_category.getText();
+        qty = Integer.parseInt(txt_quantity.getText());
+        price = Double.parseDouble(txt_price.getText());
+        
+        boolean isUpdated = false;
+
+        try {
+            Connection con = DBConnection.getConnection();
+            String sql = "UPDATE products SET product_name = ?, category = ?, quantity = ?, price = ? WHERE product_id = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, id);
+            pst.setString(2, name);
+            pst.setString(3, category);
+            pst.setInt(4, qty);
+            pst.setDouble(5, price);
+
+            int rowCount = pst.executeUpdate();
+            isUpdated = rowCount > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage());
+        }
+
+        return isUpdated;
+    }
+
+    public boolean deleteProduct() {
+        id = Integer.parseInt(txt_productId.getText());
+        boolean isDeleted = false;
+
+        try {
+            Connection con = DBConnection.getConnection();
+            String sql = "DELETE FROM products WHERE product_id = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, id);
+
+            int rowCount = pst.executeUpdate();
+            isDeleted = rowCount > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage());
+        }
+
+        return isDeleted;
+    }
+
+    public void clearTable() {
+        DefaultTableModel model = (DefaultTableModel) tbl_productDetails.getModel();
+        model.setRowCount(0);
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        txt_productId = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        txt_category = new javax.swing.JTextField();
+        txt_quantity = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        txt_price = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        txt_name = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tbl_productDetails = new javax.swing.JTable();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel6.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setText("Product Management");
+        jPanel6.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, -1, -1));
+
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setText("Product ID :");
+        jPanel6.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 90, 30));
+        jPanel6.add(txt_productId, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 140, 310, 30));
+
+        jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel15.setText("Category :");
+        jPanel6.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 90, 30));
+
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel16.setText("Name :");
+        jPanel6.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 90, 30));
+        jPanel6.add(txt_category, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 260, 310, 30));
+        jPanel6.add(txt_quantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 320, 310, 30));
+
+        jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel17.setText("Quantity :");
+        jPanel6.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 320, 90, 30));
+        jPanel6.add(txt_price, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 380, 310, 30));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Price :");
+        jPanel6.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 380, 90, 30));
+
+        jButton1.setBackground(new java.awt.Color(0, 102, 255));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("DELETE");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel6.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 560, 100, 40));
+
+        jButton2.setBackground(new java.awt.Color(0, 102, 255));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("ADD");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel6.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 560, 100, 40));
+
+        jButton3.setBackground(new java.awt.Color(0, 102, 255));
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
+        jButton3.setText("UPDATE");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jPanel6.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 560, 110, 40));
+
+        jPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel2MouseClicked(evt);
+            }
+        });
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Pictures/Back.png"))); // NOI18N
+        jLabel1.setText("Back");
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 100, 40));
+
+        jPanel6.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 110, 40));
+        jPanel6.add(txt_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 200, 310, 30));
+
+        jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 460, 700));
+
+        jScrollPane1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 51, 51), 1, true));
+
+        tbl_productDetails.setBackground(new java.awt.Color(51, 51, 51));
+        tbl_productDetails.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        tbl_productDetails.setForeground(new java.awt.Color(255, 255, 255));
+        tbl_productDetails.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Name", "Category", "Quantity", "Price"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbl_productDetails.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_productDetailsMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbl_productDetails);
+        if (tbl_productDetails.getColumnModel().getColumnCount() > 0) {
+            tbl_productDetails.getColumnModel().getColumn(0).setResizable(false);
+            tbl_productDetails.getColumnModel().getColumn(0).setPreferredWidth(20);
+            tbl_productDetails.getColumnModel().getColumn(2).setResizable(false);
+            tbl_productDetails.getColumnModel().getColumn(2).setPreferredWidth(100);
+        }
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 80, 720, 460));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1200, 700));
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+         if (deleteProduct()) {
+            JOptionPane.showMessageDialog(this, "Product Deleted Successfully");
+            clearTable();
+            setProductDetailsToTable();
+        } else {
+            JOptionPane.showMessageDialog(this, "Product Deletion Failed");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if (addProduct()) {
+            JOptionPane.showMessageDialog(this, "Product Added Successfully");
+            clearTable();
+            setProductDetailsToTable();
+        } else {
+            JOptionPane.showMessageDialog(this, "Product Addition Failed");
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        if (updateProduct()) {
+            JOptionPane.showMessageDialog(this, "Product Updated Successfully");
+            clearTable();
+            setProductDetailsToTable();
+        } else {
+            JOptionPane.showMessageDialog(this, "Product Update Failed");
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseClicked
+        HomePage home = new HomePage();
+        home.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jPanel2MouseClicked
+
+    private void tbl_productDetailsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_productDetailsMouseClicked
+        int rowNo = tbl_productDetails.getSelectedRow();
+        TableModel model = tbl_productDetails.getModel();
+
+        txt_productId.setText(model.getValueAt(rowNo, 0).toString());
+        txt_name.setText(model.getValueAt(rowNo, 1).toString());
+        txt_category.setText(model.getValueAt(rowNo, 2).toString());
+        txt_quantity.setText(model.getValueAt(rowNo, 3).toString());
+        txt_price.setText(model.getValueAt(rowNo, 4).toString());
+        
+    }//GEN-LAST:event_tbl_productDetailsMouseClicked
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ProductManagementPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ProductManagementPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ProductManagementPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ProductManagementPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ProductManagementPage().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tbl_productDetails;
+    private javax.swing.JTextField txt_category;
+    private javax.swing.JTextField txt_name;
+    private javax.swing.JTextField txt_price;
+    private javax.swing.JTextField txt_productId;
+    private javax.swing.JTextField txt_quantity;
+    // End of variables declaration//GEN-END:variables
+}
